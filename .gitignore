@@ -1,0 +1,22 @@
+# Vivado generated / temporary files
+*.cache/
+*.hw/
+*.ip_user_files/
+*.sim/
+.Xil/
+xsim.dir/
+
+# Log files and journals
+*.log
+*.jou
+*.str
+
+# WebTalk statistics
+usage_statistics_webtalk.html
+usage_statistics_webtalk.xml
+webtalk*.log
+webtalk*.jou
+
+# OS generated files
+.DS_Store
+Thumbs.db
