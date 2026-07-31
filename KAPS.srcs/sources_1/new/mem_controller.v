@@ -36,10 +36,10 @@ module mem_controller(
     
     
     reg [7:0] in_out_driver;
-    reg       oe; 
+    
 
     
-    assign in_out_line = oe ? in_out_driver : 8'bZZZZZZZZ;
+    assign in_out_line = ~read_write_ram ? in_out_driver : 8'bZZZZZZZZ;
 
     
     always @(*) begin
@@ -61,6 +61,8 @@ module mem_controller(
             state <= 3'd0;
         else if (!cs_bar)
             state <= next_state;
+        else
+            state <= 3'd6;
     end 
 
     // 3. Output Logic (Combinational)
@@ -68,20 +70,20 @@ module mem_controller(
         // Default values to prevent unwanted latches
         read_write_ram = 1'b0;
         in_out_driver  = 8'b0;
-        oe             = 1'b1; // Default driving bus
+        
 
         case(state)
             3'd0: begin
                 in_out_driver  = address[23:16];
-                read_write_ram = 1'b1;
+                read_write_ram = 1'b0;
             end
             3'd1: begin
                 in_out_driver  = address[15:8];
-                read_write_ram = 1'b1;
+                read_write_ram = 1'b0;
             end
             3'd2: begin
                 in_out_driver  = address[7:0];
-                read_write_ram = 1'b1;
+                read_write_ram = 1'b0;
             end
             3'd3: begin
                 in_out_driver  = 8'b0;
@@ -89,28 +91,28 @@ module mem_controller(
             end
             3'd4: begin
                 if (r_w_bar[1]) begin
-                    read_write_ram = 1'b0;
-                    oe             = 1'b0; 
+                    read_write_ram = 1'b1;
+                    
                 end else begin
                     in_out_driver  = data;
-                    read_write_ram = 1'b1;
-                    oe             = 1'b1;
+                    read_write_ram = 1'b0;
+                    
                 end
             end
             3'd5: begin
                 if (r_w_bar[0]) begin
-                    read_write_ram = 1'b0;
-                    oe             = 1'b0; 
+                    read_write_ram = 1'b1;
+                    
                 end else begin
                     in_out_driver  = data;
-                    read_write_ram = 1'b1;
-                    oe             = 1'b1;
+                    read_write_ram = 1'b0;
+                    
                 end
             end
             default: begin
                 read_write_ram = 1'b0;
                 in_out_driver  = 8'b0;
-                oe             = 1'b0;
+                
             end
         endcase
     end
