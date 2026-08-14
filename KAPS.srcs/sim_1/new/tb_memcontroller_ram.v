@@ -51,7 +51,7 @@ module tb_memcontroller_ram(
         .in_out_line    (in_out_line),
         .read_write_ram (read_write_ram)
     );
-    
+
     ram mem_store(
         .clk            (clk),
         .clk_bar        (clk_bar),
@@ -91,7 +91,7 @@ module tb_memcontroller_ram(
         // Address bytes, then Write Data on the bus.
         // =========================================================================
         $display("[%0t ns] --- Starting WRITE Cycle ---", $time);
-        address = 24'h000001;
+        address = 24'hABCDEF;
         data    = 8'hA5;
         r_w_bar = 2'b00; // Write mode for both state 4 and 5
         cs_bar  = 1'b0;  // Enable Controller
@@ -108,7 +108,7 @@ module tb_memcontroller_ram(
         // allowing testbench/RAM to drive mock data back on in_out_line.
         // =========================================================================
         $display("[%0t ns] --- Starting READ Cycle ---", $time);
-        address = 24'h000001;
+        // address = 24'hABCDEF;
         r_w_bar = 2'b11; // Read mode for both state 4 and 5
         cs_bar  = 1'b0;  // Enable Controller
 

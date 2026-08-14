@@ -6,10 +6,10 @@ module ram(
     input rw_bar,
     inout [7:0] data
 );
-    reg [7:0] ram_data [0:1023];
+    reg [7:0] ram_data [0:33554431]; // 32MB RAM
     reg [24:0] addr;
     reg [2:0] state_ram;
-    reg [9:0] addr_temp;
+    // reg [9:0] addr_temp;
 
     localparam ADDR_BYTE2 = 3'd0,
                ADDR_BYTE1 = 3'd1,
@@ -54,12 +54,12 @@ module ram(
 
                     BLANK: begin                    //state_ram FOR CLK CYCLE 4     
                         state_ram <= DATA_1;
-                        addr_temp <= addr[9:0];
+                        // addr_temp <= addr[9:0];
                     end
 
                     DATA_1: begin                   //state_ram FOR CLK CYCLE 5
                         if (rw_bar == 0) begin
-                            ram_data[addr_temp] <= data;
+                            ram_data[addr] <= data;
                         end 
                         
                         state_ram <= DATA_2;
@@ -67,7 +67,7 @@ module ram(
 
                     DATA_2: begin                   //state_ram FOR CLK CYCLE 6
                         if (rw_bar == 0) begin
-                            ram_data[addr_temp + 1] <= data;
+                            ram_data[addr + 1] <= data;
                         end 
                         state_ram <= IDLE;
                     end
