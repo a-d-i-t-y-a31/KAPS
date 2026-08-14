@@ -33,12 +33,8 @@ module tb_memcontroller_ram(
     reg  [23:0] address;
     reg  [7:0] data;
     
-    wire [7:0] in_out_line;      // MUST be wire for bidire
-    ctional port
-    wire       read_write_ram;  // MUST be wire because it's driven by DUT output
-
-       
-    
+    wire [7:0] in_out_line;      // MUST be wire for bidirectional port
+    wire       read_write_ram;  // MUST be wire because it's driven by DUT output    
       
     // Generate inverse clock continuously
     assign clk_bar = ~clk;
