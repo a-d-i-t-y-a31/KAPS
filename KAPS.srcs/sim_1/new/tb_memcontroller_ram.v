@@ -41,7 +41,7 @@ module tb_memcontroller_ram(
       
     // Generate inverse clock continuously
     assign clk_bar = ~clk;
-
+    
     // 2. Instantiate DUT (Device Under Test)
     mem_controller u_mem_controller (
         .clk            (clk),
@@ -64,7 +64,7 @@ module tb_memcontroller_ram(
         .data           (in_out_line)
     );
     
-    
+    always #5 clk = ~clk;
     initial begin
         // --- Initialize Signals ---
         clk              = 1'b0;
@@ -104,7 +104,7 @@ module tb_memcontroller_ram(
         // allowing testbench/RAM to drive mock data back on in_out_line.
         // =========================================================================
         $display("[%0t ns] --- Starting READ Cycle ---", $time);
-        address = 24'h123456;
+        address = 24'hABCDEF;
         r_w_bar = 2'b11; // Read mode for both state 4 and 5
         cs_bar  = 1'b0;  // Enable Controller
 

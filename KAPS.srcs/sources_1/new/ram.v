@@ -6,10 +6,10 @@ module ram(
     input rw_bar,
     inout [7:0] data
 );
-    reg [7:0] ram_data [0:1024];
+    reg [7:0] ram_data [0:1023];
     reg [24:0] addr;
     reg [2:0] state;
-
+    reg [9:0] addr_temp;
 
     localparam ADDR_BYTE2 = 3'd0,
                ADDR_BYTE1 = 3'd1,
@@ -21,7 +21,7 @@ module ram(
     assign data = (cs_bar == 0 && rw_bar == 1) ? (state == DATA_1 ? ram_data[addr] : (state == DATA_2 ? ram_data[addr+1] : 8'bz)) : 8'bz;
 
     always @(posedge clk) begin
-        if (cs_bar == 1) begin
+        if (cs_bar == 0) begin
 //            if (rset == 1) begin
 //                integer i;
                 
@@ -49,18 +49,19 @@ module ram(
 
                     BLANK: begin                    //STATE FOR CLK CYCLE 4     
                         state <= DATA_1;
+                        addr_temp <= addr[9:0];
                     end
 
                     DATA_1: begin                   //STATE FOR CLK CYCLE 5
                         if (rw_bar == 0) begin
-                            ram_data[addr] <= data;
+                            ram_data[addr_temp] <= data;
                         end 
                         state <= DATA_2;
                     end
 
                     DATA_2: begin                   //STATE FOR CLK CYCLE 6
                         if (rw_bar == 0) begin
-                            ram_data[addr+1] <= data;
+                            ram_data[addr_temp+1] <= data;
                         end 
                         state <= ADDR_BYTE2;
                     end
@@ -70,5 +71,9 @@ module ram(
                     end
                 endcase
             end
+            
+          else begin
+            state <= ADDR_BYTE2;
+          end
         end
 endmodule
