@@ -15,8 +15,9 @@ module ram(
                ADDR_BYTE1 = 3'd1,
                ADDR_BYTE0 = 3'd2,
                BLANK      = 3'd3,
-               DATA_1   = 3'd4,
-               DATA_2  = 3'd5;
+               DATA_1     = 3'd4,
+               DATA_2     = 3'd5,
+               IDLE       = 3'd6;
 
     assign data = (cs_bar == 0 && rw_bar == 1) ? (state == DATA_1 ? ram_data[addr] : (state == DATA_2 ? ram_data[addr+1] : 8'bz)) : 8'bz;
 
@@ -32,6 +33,10 @@ module ram(
 //            end 
           
                 case (state)
+
+                    IDLE: begin                       //STATE FOR CLK CYCLE 0
+                        state <= ADDR_BYTE2;
+                    end
 
                     ADDR_BYTE2: begin               //STATE FOR CLK CYCLE 1
                         addr[24:17] <= data;
@@ -63,17 +68,17 @@ module ram(
                         if (rw_bar == 0) begin
                             ram_data[addr_temp+1] <= data;
                         end 
-                        state <= ADDR_BYTE2;
+                        state <= IDLE;
                     end
 
                     default: begin                  //DEFAULT STATE
-                        state <= ADDR_BYTE2;
+                        state <= IDLE;
                     end
                 endcase
             end
             
           else begin
-            state <= ADDR_BYTE2;
+            state <= IDLE;
           end
         end
 endmodule
