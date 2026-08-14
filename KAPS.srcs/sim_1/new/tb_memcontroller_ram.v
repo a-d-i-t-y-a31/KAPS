@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 07/30/2026 11:56:08 PM
+// Create Date: 08/13/2026 03:24:29 PM
 // Design Name: 
-// Module Name: tb_mem_controller
+// Module Name: tb_memcontroller_ram
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -19,8 +19,11 @@
 // 
 //////////////////////////////////////////////////////////////////////////////////
 
-module tb_mem_controller();
 
+module tb_memcontroller_ram(
+
+    );
+    
     // 1. Testbench Signal Declarations
     reg        clk;
     wire       clk_bar;          // Driven combinational or via assign
@@ -33,14 +36,9 @@ module tb_mem_controller();
     wire [7:0] in_out_line;      // MUST be wire for bidirectional port
     wire       read_write_ram;  // MUST be wire because it's driven by DUT output
 
-    // Testbench driver for reading from simulated external RAM
-    reg  [7:0] tb_in_out_driver;
-
-
-    // Drive the bi-directional line from testbench when DUT releases it (tb_oe = 1)
-
-    assign in_out_line = read_write_ram ? tb_in_out_driver : 8'bZZZZZZZZ;
-
+       
+    
+      
     // Generate inverse clock continuously
     assign clk_bar = ~clk;
 
@@ -56,13 +54,17 @@ module tb_mem_controller();
         .in_out_line    (in_out_line),
         .read_write_ram (read_write_ram)
     );
-
     
-
-    // 3. Clock Generation (10ns period -> 100MHz)
-    always #5 clk = ~clk;
-
-    // 4. Test Stimulus Sequence
+    ram mem_store(
+        .clk            (clk),
+        .clk_bar        (clk_bar),
+        .rset            (rst),
+        .cs_bar         (cs_bar),
+        .rw_bar        (read_write_ram),
+        .data           (in_out_line)
+    );
+    
+    
     initial begin
         // --- Initialize Signals ---
         clk              = 1'b0;
@@ -71,7 +73,7 @@ module tb_mem_controller();
         r_w_bar          = 2'b00;
         address          = 24'h000000;
         data             = 8'h00;
-        tb_in_out_driver = 8'h00;
+        
         
 
         // --- Release Reset ---
@@ -111,10 +113,9 @@ module tb_mem_controller();
 
         // Entering State 4 (DUT releases bus, testbench simulates RAM response)
 
-        tb_in_out_driver = 8'h3C; // Mock RAM Data byte 1
-
+        
         @(posedge clk); // State 5
-        tb_in_out_driver = 8'h7E; // Mock RAM Data byte 2
+        
 
         @(posedge clk); // Done cycling
         cs_bar           = 1'b1;
@@ -123,5 +124,5 @@ module tb_mem_controller();
         $display("[%0t ns] --- Simulation Completed Successfully ---", $time);
         $finish;
     end
-
+    
 endmodule

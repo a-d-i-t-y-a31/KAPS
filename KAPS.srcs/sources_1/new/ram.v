@@ -6,7 +6,7 @@ module ram(
     input rw_bar,
     inout [7:0] data
 );
-    reg [7:0] ram_data [0:33554431];
+    reg [7:0] ram_data [0:1024];
     reg [24:0] addr;
     reg [2:0] state;
 
@@ -21,16 +21,16 @@ module ram(
     assign data = (cs_bar == 0 && rw_bar == 1) ? (state == DATA_1 ? ram_data[addr] : (state == DATA_2 ? ram_data[addr+1] : 8'bz)) : 8'bz;
 
     always @(posedge clk) begin
-        if (cs_bar == 0) begin
-            if (rset == 1) begin
-                integer i;
+        if (cs_bar == 1) begin
+//            if (rset == 1) begin
+//                integer i;
                 
-                for (i = 0; i < 33554432; i = i + 1) begin          // FIND A BETTER WAY TO RESET THE RAM
-                    ram_data[i] = 8'b0;
-                end
+//                for (i = 0; i < 33554432; i = i + 1) begin          // FIND A BETTER WAY TO RESET THE RAM
+//                    ram_data[i] = 8'b0;
+//                end
 
-            end 
-            else begin
+//            end 
+          
                 case (state)
 
                     ADDR_BYTE2: begin               //STATE FOR CLK CYCLE 1
@@ -71,5 +71,4 @@ module ram(
                 endcase
             end
         end
-    end
 endmodule

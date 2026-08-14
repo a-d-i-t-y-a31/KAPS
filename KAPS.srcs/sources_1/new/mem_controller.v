@@ -24,12 +24,12 @@ module mem_controller(
     input             clk,
     input             clk_bar,
     input             rst,
-    input             cs_bar,
+    input             cs_bar,  // remove as input keep as output
     input      [1:0]  r_w_bar,        
     input      [23:0] address,        
-    input      [7:0]  data,           
-    inout      [7:0]  in_out_line,   
-    output reg        read_write_ram
+    input      [7:0]  data,    // input data to be written       
+    inout      [7:0]  in_out_line,   // either read data or data to be written to ram
+    output reg        read_write_ram // serialised r_w_bar
 );
 
     reg [2:0] state, next_state;
@@ -62,7 +62,7 @@ module mem_controller(
         else if (!cs_bar)
             state <= next_state;
         else
-            state <= 3'd6;
+            state <= 3'd6; //?
     end 
 
     // 3. Output Logic (Combinational)
