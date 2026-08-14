@@ -61,12 +61,13 @@ module ram(
                         if (rw_bar == 0) begin
                             ram_data[addr_temp] <= data;
                         end 
+                        
                         state <= DATA_2;
                     end
 
                     DATA_2: begin                   //STATE FOR CLK CYCLE 6
                         if (rw_bar == 0) begin
-                            ram_data[addr_temp+1] <= data;
+                            ram_data[addr_temp + 1] <= data;
                         end 
                         state <= IDLE;
                     end

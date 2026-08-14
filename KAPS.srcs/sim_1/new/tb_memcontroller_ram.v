@@ -87,13 +87,13 @@ module tb_memcontroller_ram(
         // Address bytes, then Write Data on the bus.
         // =========================================================================
         $display("[%0t ns] --- Starting WRITE Cycle ---", $time);
-        address = 24'hABCDEF;
+        address = 24'h000001;
         data    = 8'hA5;
         r_w_bar = 2'b00; // Write mode for both state 4 and 5
         cs_bar  = 1'b0;  // Enable Controller
 
         // Wait 6 clock cycles to traverse states 0 to 5
-        repeat (7) @(posedge clk);
+        repeat (8) @(posedge clk);
 
         cs_bar = 1'b1; // Disable Controller
         #20;
@@ -104,12 +104,12 @@ module tb_memcontroller_ram(
         // allowing testbench/RAM to drive mock data back on in_out_line.
         // =========================================================================
         $display("[%0t ns] --- Starting READ Cycle ---", $time);
-        address = 24'hABCDEF;
+        address = 24'h000001;
         r_w_bar = 2'b11; // Read mode for both state 4 and 5
         cs_bar  = 1'b0;  // Enable Controller
 
         // States 0, 1, 2, 3
-        repeat (5) @(posedge clk);
+        repeat (8) @(posedge clk);
 
         // Entering State 4 (DUT releases bus, testbench simulates RAM response)
 
