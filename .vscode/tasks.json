@@ -11,7 +11,6 @@
         "${workspaceFolder}/sim.out",
         "${file}",
         "${workspaceFolder}/KAPS.srcs/sources_1/new/*.v",
-        "${workspaceFolder}/KAPS.srcs/ram.v"
       ],
       "group": {
         "kind": "build",
@@ -40,7 +39,13 @@
     {
       "label": "iVerilog: Build & Run All",
       "type": "shell",
-      "command": "iverilog -g2012 -o sim.out ${workspaceFolder}/KAPS.srcs/sim_1/new/*.v ${workspaceFolder}/KAPS.srcs/sources_1/new/*.v ${workspaceFolder}/KAPS.srcs/ram.v && vvp sim.out",
+      "command": "iverilog -g2012 -o sim.out ${workspaceFolder}/KAPS.srcs/sim_1/new/*.v ${workspaceFolder}/KAPS.srcs/sources_1/new/*.v && vvp sim.out",
+      "problemMatcher": []
+    },
+    {
+      "label": "GTKWave: Launch Waveform Viewer",
+      "type": "shell",
+      "command": "env -u LD_LIBRARY_PATH -u LD_PRELOAD gtkwave ${workspaceFolder}/dump.vcd",
       "problemMatcher": []
     }
   ]

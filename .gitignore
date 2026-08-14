@@ -22,3 +22,7 @@ webtalk*.jou
 Thumbs.db
 
 KAPS.runs/*
+*.vcd
+*.gtkw
+sim.out
+tasks.json

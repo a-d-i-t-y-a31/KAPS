@@ -33,7 +33,8 @@ module tb_memcontroller_ram(
     reg  [23:0] address;
     reg  [7:0] data;
     
-    wire [7:0] in_out_line;      // MUST be wire for bidirectional port
+    wire [7:0] in_out_line;      // MUST be wire for bidire
+    ctional port
     wire       read_write_ram;  // MUST be wire because it's driven by DUT output
 
        
@@ -65,6 +66,13 @@ module tb_memcontroller_ram(
     );
     
     always #5 clk = ~clk;
+
+
+    initial begin
+        $dumpfile("dump.vcd"); // Specifies the output VCD file name
+        $dumpvars(0, tb_memcontroller_ram); // 0 means dump ALL signals & submodules inside tb_memcontroller_ram
+    end
+
     initial begin
         // --- Initialize Signals ---
         clk              = 1'b0;

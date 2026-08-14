@@ -8,7 +8,7 @@ module ram(
 );
     reg [7:0] ram_data [0:1023];
     reg [24:0] addr;
-    reg [2:0] state;
+    reg [2:0] state_ram;
     reg [9:0] addr_temp;
 
     localparam ADDR_BYTE2 = 3'd0,
@@ -19,7 +19,7 @@ module ram(
                DATA_2     = 3'd5,
                IDLE       = 3'd6;
 
-    assign data = (cs_bar == 0 && rw_bar == 1) ? (state == DATA_1 ? ram_data[addr] : (state == DATA_2 ? ram_data[addr+1] : 8'bz)) : 8'bz;
+    assign data = (cs_bar == 0 && rw_bar == 1) ? (state_ram == DATA_1 ? ram_data[addr] : (state_ram == DATA_2 ? ram_data[addr+1] : 8'bz)) : 8'bz;
 
     always @(posedge clk) begin
         if (cs_bar == 0) begin
@@ -32,54 +32,54 @@ module ram(
 
 //            end 
           
-                case (state)
+                case (state_ram)
 
-                    IDLE: begin                       //STATE FOR CLK CYCLE 0
-                        state <= ADDR_BYTE2;
+                    IDLE: begin                       //state_ram FOR CLK CYCLE 0
+                        state_ram <= ADDR_BYTE2;
                     end
 
-                    ADDR_BYTE2: begin               //STATE FOR CLK CYCLE 1
+                    ADDR_BYTE2: begin               //state_ram FOR CLK CYCLE 1
                         addr[24:17] <= data;
-                        state <= ADDR_BYTE1;
+                        state_ram <= ADDR_BYTE1;
                     end
-                    ADDR_BYTE1: begin               //STATE FOR CLK CYCLE 2
+                    ADDR_BYTE1: begin               //state_ram FOR CLK CYCLE 2
                         addr[16:9] <= data;
-                        state <= ADDR_BYTE0;
+                        state_ram <= ADDR_BYTE0;
                     end
-                    ADDR_BYTE0: begin               //STATE FOR CLK CYCLE 3
+                    ADDR_BYTE0: begin               //state_ram FOR CLK CYCLE 3
                         addr[8:1] <= data;
                         addr[0] <= 0;
-                        state <= BLANK;
+                        state_ram <= BLANK;
                     end
 
-                    BLANK: begin                    //STATE FOR CLK CYCLE 4     
-                        state <= DATA_1;
+                    BLANK: begin                    //state_ram FOR CLK CYCLE 4     
+                        state_ram <= DATA_1;
                         addr_temp <= addr[9:0];
                     end
 
-                    DATA_1: begin                   //STATE FOR CLK CYCLE 5
+                    DATA_1: begin                   //state_ram FOR CLK CYCLE 5
                         if (rw_bar == 0) begin
                             ram_data[addr_temp] <= data;
                         end 
                         
-                        state <= DATA_2;
+                        state_ram <= DATA_2;
                     end
 
-                    DATA_2: begin                   //STATE FOR CLK CYCLE 6
+                    DATA_2: begin                   //state_ram FOR CLK CYCLE 6
                         if (rw_bar == 0) begin
                             ram_data[addr_temp + 1] <= data;
                         end 
-                        state <= IDLE;
+                        state_ram <= IDLE;
                     end
 
-                    default: begin                  //DEFAULT STATE
-                        state <= IDLE;
+                    default: begin                  //DEFAULT state_ram
+                        state_ram <= IDLE;
                     end
                 endcase
             end
             
           else begin
-            state <= IDLE;
+            state_ram <= IDLE;
           end
         end
 endmodule
