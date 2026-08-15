@@ -4,31 +4,31 @@
 //                                   └──────────┬───────────┘
 //                                              │
 //                                              ▼
-//                                   ┌─────────────────────┐
-//                                   │ 8x8 Hardware        │
-//                                   │ Multiplier          │
+//                                   ┌──────────────────────┐
+//                                   │ 8x8 Hardware         │
+//                                   │ Multiplier           │
 //                                   └──────────┬───────────┘
 //                                              │
 //                                          16-bit Product
 //                                              │
 //                                              ▼
-//                                   ┌─────────────────────┐
-//                                   │ Sign-Extension      │ (Pads to 32 bits)
+//                                   ┌──────────────────────┐
+//                                   │ Sign-Extension       │ (Pads to 32 bits)
 //                                   └──────────┬───────────┘
 //                                              │
 //   32-bit Current Accumulator ────────────────┼──────────┐
 //   (Feedback Loop)                            │          │
 //                                              ▼          ▼
-//                                   ┌─────────────────────┐
-//                                   │ 32-bit Adder        │
+//                                   ┌──────────────────────┐
+//                                   │ 32-bit Adder         │
 //                                   └──────────┬───────────┘
 //                                              │
 //                                          32-bit Sum
 //                                              │
 //                                              ▼
-//                                   ┌─────────────────────┐
-//     Reset / Clear (rst) ─────────►│ 32-bit Accumulator  │◄── Clock Signal (clk)
-//                                   │ Register            │
+//                                   ┌──────────────────────┐
+//     Reset / Clear (rst) ─────────►│ 32-bit Accumulator   │◄── Clock Signal (clk)
+//                                   │ Register             │
 //                                   └──────────┬───────────┘
 //                                              │
 //                                              ▼
